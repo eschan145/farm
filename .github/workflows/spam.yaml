@@ -41,7 +41,7 @@ jobs:
             git commit -m "Remove spam commit $i" --quiet
 
             # Optionally display progress every 1,000 commits
-            if (( i % 500 == 0 )); then
+            if (( i % 100 == 0 )); then
               printf "Completed: $i commits\r"
             fi
           done
