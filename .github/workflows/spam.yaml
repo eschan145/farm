@@ -23,30 +23,53 @@ jobs:
         run: |
           git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
 
+      name: Spam Commits
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  spam_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config user.name "eschan145"
+          git config user.email "eschan145@users.noreply.github.com"
+
+      - name: Authenticate with GitHub Token
+        env:
+          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
+
       - name: Spam Commits
         run: |
-          BATCH_SIZE=1000 # Number of files to create and commit in one go
-          for ((i=1; i<=5000; i+=BATCH_SIZE))
+          for i in {1..200000}
           do
-            # Create and stage multiple files
-            for ((j=0; j<BATCH_SIZE; j++))
-            do
-              file_index=$((i + j))
-              touch spam_commit_$file_index.txt
-              echo "Spam content for commit $file_index" > spam_commit_$file_index.txt # Optionally add some content
-            done
-            git add spam_commit_*.txt
-            git commit -m "Batch spam commits from $i to $((i + BATCH_SIZE - 1))" --quiet
+            # Create an empty file
+            touch spam_commit_$i.txt
+            
+            # Stage and commit the file creation
+            git add spam_commit_$i.txt
+            git commit -m "Spam commit $i" --quiet
+            
+            # Remove the file, stage, and commit the deletion
+            git rm spam_commit_$i.txt --quiet
+            git commit -m "Remove spam commit $i" --quiet
 
-            # Remove the files and stage the deletions
-            git rm spam_commit_*.txt
-            git commit -m "Remove spam commits from $i to $((i + BATCH_SIZE - 1))" --quiet
-
-            # Display the count on the same line
-            # printf "\rTotal commits: $((i + BATCH_SIZE))"
+            # Optionally display progress every 1,000 commits
+            if (( i % 1000 == 0 )); then
+              printf "Completed: $i commits\r"
+            fi
           done
           echo "" # Move to a new line after the loop finishes
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
         env:
-          # A GitHub PAT must be set up as an Actions secret in the repository
           GH_PAT: ${{ secrets.GH_PAT }}
+
