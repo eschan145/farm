@@ -38,7 +38,7 @@ jobs:
             git commit -m "Remove spam_commit_$i" --quiet
 
             # Display the count on the same line, using \r to overwrite the previous output
-            printf "\rTotal commits: $((i * 2))"
+            printf "Total commits: $((i))\r"
           done
           echo "" # Move to a new line after the loop finishes
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
