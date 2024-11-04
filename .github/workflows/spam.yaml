@@ -23,31 +23,6 @@ jobs:
         run: |
           git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
 
-      name: Spam Commits
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  spam_commits:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Configure Git
-        run: |
-          git config user.name "eschan145"
-          git config user.email "eschan145@users.noreply.github.com"
-
-      - name: Authenticate with GitHub Token
-        env:
-          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        run: |
-          git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
-
       - name: Spam Commits
         run: |
           for i in {1..200000}
@@ -72,4 +47,3 @@ jobs:
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
-
