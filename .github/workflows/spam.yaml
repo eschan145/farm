@@ -28,7 +28,9 @@ jobs:
       - name: Spam Commits
         run: |
           total_commits=12000
-          for i in {1..12000}
+          start_time=$(date +%s) # Capture the start time
+          
+          for ((i=1; i<=total_commits; i++))
           do
             # Create an empty file
             touch spam_commit_$i.txt
@@ -40,11 +42,29 @@ jobs:
             # Remove the file, stage, and commit the deletion
             git rm spam_commit_$i.txt --quiet
             git commit -m "Remove spam commit $i" --quiet
-
-            # Optionally display progress every 1,000 commits
+          
+            # Display progress, percent, and ETA every 100 commits
             if (( i % 100 == 0 )); then
+              current_time=$(date +%s)
+              elapsed=$((current_time - start_time))
+              
               percent=$(( (i * 100) / total_commits ))
-              printf "Completed: $i/$total_commits commits (%d%%)\r" "$percent"
+              
+              # Estimate total time and remaining time
+              if (( i > 0 )); then
+                estimated_total_time=$(( (elapsed * total_commits) / i ))
+                eta=$((estimated_total_time - elapsed))
+              else
+                eta=0
+              fi
+              
+              # Convert ETA to hours, minutes, and seconds for display
+              eta_hours=$((eta / 3600))
+              eta_minutes=$(( (eta % 3600) / 60 ))
+              eta_seconds=$((eta % 60))
+              
+              printf "Completed: %d/%d commits (%d%%) | ETA: %02d:%02d:%02d\r" \
+                     "$i" "$total_commits" "$percent" "$eta_hours" "$eta_minutes" "$eta_seconds"
             fi
           done
           echo "" # Move to a new line after the loop finishes
