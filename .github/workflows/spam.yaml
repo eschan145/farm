@@ -41,9 +41,9 @@ jobs:
             git commit -m "Remove spam commit $i" --quiet
 
             # Optionally display progress every 1,000 commits
-            # if (( i % 500 == 0 )); then
-            #   printf "Completed: $i commits\r"
-            # fi
+            if (( i % 500 == 0 )); then
+              printf "Completed: $i commits\r"
+            fi
           done
           echo "" # Move to a new line after the loop finishes
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
