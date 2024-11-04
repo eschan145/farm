@@ -27,7 +27,7 @@ jobs:
 
       - name: Spam Commits
         run: |
-          total_commits=16000
+          total_commits=160000
           start_time=$(date +%s) # Capture the start time
           
           for ((i=1; i<=total_commits; i++))
