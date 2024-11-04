@@ -27,6 +27,7 @@ jobs:
 
       - name: Spam Commits
         run: |
+          total_commit = 12000
           for i in {1..12000}
           do
             # Create an empty file
