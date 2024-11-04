@@ -25,14 +25,14 @@ jobs:
 
       - name: Spam Commits
         run: |
-          for i in {1..30}
+          for i in {1..30000}
           do
             touch spam_commit_$i.txt            # Create an empty file
             git add spam_commit_$i.txt          # Stage the file
             git commit -m "Spam commit $i"      # Commit the file
             rm spam_commit_$i.txt               # Delete the file
             git add spam_commit_$i.txt          # Stage the deletion
-            git commit -m "Remove spam_commit_$i.txt" # Commit the deletion
+            git commit -m "Remove spam_commit_$i" # Commit the deletion
           done
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
         env:
