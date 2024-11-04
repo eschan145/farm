@@ -1,6 +1,9 @@
 name: Primary committer
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '*/6 * * * *'
 
