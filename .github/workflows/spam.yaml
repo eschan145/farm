@@ -42,7 +42,8 @@ jobs:
 
             # Optionally display progress every 1,000 commits
             if (( i % 100 == 0 )); then
-              printf "Completed: $i commits\r"
+              percent=$(( (i * 100) / total_commits ))
+              printf "Completed: $i/$total_commits commits (%d%%)\r" "$percent"
             fi
           done
           echo "" # Move to a new line after the loop finishes
