@@ -14,12 +14,18 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "eschan145"
+          git config user.email "eschan145@users.noreply.github.com"
+
+      - name: Authenticate with GitHub Token
+        env:
+          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
 
       - name: Spam Commits
         run: |
-          for i in {1..3000}
+          for i in {1..30}
           do
             touch spam_commit_$i.txt            # Create an empty file
             git add spam_commit_$i.txt          # Stage the file
