@@ -25,7 +25,7 @@ jobs:
 
       - name: Spam Commits
         run: |
-          for i in {1..3000}
+          for i in {1..200000}
           do
             # Create an empty file, stage, and commit
             touch spam_commit_$i.txt
@@ -38,7 +38,7 @@ jobs:
             git commit -m "Remove spam_commit_$i" --quiet
 
             # Display the count on the same line, using \r to overwrite the previous output
-            printf "Total commits: $((i))\r"
+            # printf "Total commits: $((i))\r"
           done
           echo "" # Move to a new line after the loop finishes
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
