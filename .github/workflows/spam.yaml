@@ -35,7 +35,7 @@ jobs:
             git commit -m "Spam commit $i" --quiet
             
             # Remove the file, stage, and commit the deletion
-            git rm spam_commit_$i.txt
+            git rm spam_commit_$i.txt --quiet
             git commit -m "Remove spam commit $i" --quiet
 
             # Optionally display progress every 1,000 commits
