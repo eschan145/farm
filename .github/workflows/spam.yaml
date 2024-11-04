@@ -25,20 +25,25 @@ jobs:
 
       - name: Spam Commits
         run: |
-          for i in {1..200000}
+          BATCH_SIZE=1000 # Number of files to create and commit in one go
+          for ((i=1; i<=5000; i+=BATCH_SIZE))
           do
-            # Create an empty file, stage, and commit
-            touch spam_commit_$i.txt
-            git add spam_commit_$i.txt
-            git commit -m "Spam commit $i" --quiet
+            # Create and stage multiple files
+            for ((j=0; j<BATCH_SIZE; j++))
+            do
+              file_index=$((i + j))
+              touch spam_commit_$file_index.txt
+              echo "Spam content for commit $file_index" > spam_commit_$file_index.txt # Optionally add some content
+            done
+            git add spam_commit_*.txt
+            git commit -m "Batch spam commits from $i to $((i + BATCH_SIZE - 1))" --quiet
 
-            # Delete the file, stage, and commit
-            rm spam_commit_$i.txt
-            git add spam_commit_$i.txt
-            git commit -m "Remove spam_commit_$i" --quiet
+            # Remove the files and stage the deletions
+            git rm spam_commit_*.txt
+            git commit -m "Remove spam commits from $i to $((i + BATCH_SIZE - 1))" --quiet
 
-            # Display the count on the same line, using \r to overwrite the previous output
-            # printf "Total commits: $((i))\r"
+            # Display the count on the same line
+            # printf "\rTotal commits: $((i + BATCH_SIZE))"
           done
           echo "" # Move to a new line after the loop finishes
           git push https://$GH_PAT@github.com/eschan145/farm.git --force
