@@ -19,7 +19,7 @@ jobs:
           git config user.name "eschan145"
           git config user.email "esamuelchan@gmail.com"
 
-      - name: Authenticate with GitHub Token
+      - name: Authenticate with GitHub PAT
         env:
           TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
