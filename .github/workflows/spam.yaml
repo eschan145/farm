@@ -1,6 +1,6 @@
 name: Spam Commits
 
-on:
+don:
   push:
     branches:
       - main
