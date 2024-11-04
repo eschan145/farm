@@ -37,7 +37,7 @@ jobs:
             
             # Stage and commit the file creation
             git add spam_commit_$i.txt
-            # git commit -m "Spam commit $i" --quiet
+            git commit -m "Spam commit $i" --quiet
             
             # Remove the file, stage, and commit the deletion
             git rm spam_commit_$i.txt --quiet
