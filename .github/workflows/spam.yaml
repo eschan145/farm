@@ -1,0 +1,31 @@
+name: Spam Commits
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  spam_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Spam Commits
+        run: |
+          for i in {1..3000}
+          do
+            touch spam_commit_$i.txt            # Create an empty file
+            git add spam_commit_$i.txt          # Stage the file
+            git commit -m "Spam commit $i"      # Commit the file
+            rm spam_commit_$i.txt               # Delete the file
+            git add spam_commit_$i.txt          # Stage the deletion
+            git commit -m "Remove spam_commit_$i.txt" # Commit the deletion
+          done
+          git push origin main --force         # Force push all commits
