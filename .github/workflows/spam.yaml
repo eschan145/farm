@@ -40,14 +40,10 @@ jobs:
             # Remove the file, stage, and commit the deletion
             git rm spam_commit_$i.txt --quiet
             git commit -m "Spam commit $i" --quiet
-            
-            # Push every 500 commits
-            if (( i % 500 == 0 )); then
-              git push https://$GH_PAT@github.com/eschan145/farm.git --force
-            fi
-          
-            # Display progress, percent, and ETA every 50 commits
+              
+            # Display progress, percent, ETA, and push every 50 commits
             if (( i % 50 == 0 )); then
+              git push https://$GH_PAT@github.com/eschan145/farm.git --force
               current_time=$(date +%s)
               elapsed=$((current_time - start_time))
               
