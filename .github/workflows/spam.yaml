@@ -1,9 +1,8 @@
-name: Spam Commits
+name: Primary committer
 
-don:
-  push:
-    branches:
-      - main
+on:
+  schedule:
+    - cron: '*/6 * * * *'
 
 jobs:
   spam_commits:
@@ -25,7 +24,7 @@ jobs:
 
       - name: Spam Commits
         run: |
-          for i in {1..600000}
+          for i in {1..20000}
           do
             # Create an empty file
             touch spam_commit_$i.txt
