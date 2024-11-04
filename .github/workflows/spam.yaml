@@ -28,4 +28,7 @@ jobs:
             git add spam_commit_$i.txt          # Stage the deletion
             git commit -m "Remove spam_commit_$i.txt" # Commit the deletion
           done
-          git push origin main --force         # Force push all commits
+          git push https://$GH_PAT@github.com/eschan145/DieKnow.git --force
+        env:
+          # A GitHub PAT must be set up as an Actions secret in the repository
+          GH_PAT: ${{ secrets.GH_PAT }}
