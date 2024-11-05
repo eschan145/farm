@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours
 
 jobs:
   spam_commits:
@@ -25,7 +27,7 @@ jobs:
 
       - name: Spam Commits
         run: |
-          total_commits=10000000
+          total_commits=1000000
           start_time=$(date +%s) # Capture the start time
           
           for ((i=1; i<=total_commits; i++))
@@ -41,7 +43,7 @@ jobs:
             git rm spam_commit_$i.txt --quiet
             git commit -m "Spam commit $i" --quiet
               
-            # Display progress, percent, ETA, and push every 50 commits
+            # Display progress, percent, ETA, and push every 500 commits
             if (( i % 500 == 0 )); then
               git push https://$GH_PAT@github.com/eschan145/farm.git --force
               current_time=$(date +%s)
