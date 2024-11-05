@@ -1,9 +1,6 @@
 name: Primary committer
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '0 */6 * * *'  # Runs every 6 hours
 
@@ -26,6 +23,7 @@ jobs:
           git remote set-url origin https://eschan145:$TOKEN@github.com/${{ github.repository }}.git
 
       - name: Spam Commits
+        timeout-minutes: 4294967296
         run: |
           total_commits=1000000
           start_time=$(date +%s) # Capture the start time
