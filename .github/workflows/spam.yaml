@@ -1,9 +1,7 @@
 name: Primary committer
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
   # schedule:
   #   - cron: '0 */6 * * *'  # Runs every 6 hours
 
