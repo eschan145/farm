@@ -1,0 +1,56 @@
+name: Mass PR Creation and Closure
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  mass-pr:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      
+    - name: Configure Git
+      run: |
+        git config --global user.name "eschan145"
+        git config --global user.email "esamuelchan@gmail.com"
+        
+    - name: Create and Close PRs in a Loop
+      env:
+        GH_TOKEN: ${{ secrets.GH_PAT }}
+      run: |
+        # Number of PRs to create
+        PR_COUNT=100000  # Adjust to a smaller count
+
+        # Create branches and pull requests
+        for i in $(seq 1 $PR_COUNT); do
+          # Create a new branch
+          branch_name="test-branch-$i"
+          git checkout -b $branch_name
+          echo "Test file for PR $i" > "file_$i.txt"
+          git add "file_$i.txt"
+          git commit -m "Add file_$i.txt for PR $i"
+          git push origin $branch_name
+
+          # Open PR
+          pr_response=$(curl -s -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d "{\"title\":\"Test PR $i\",\"head\":\"$branch_name\",\"base\":\"main\"}")
+
+          pr_number=$(echo "$pr_response" | jq .number)
+          echo "Opened PR #$pr_number"
+
+          # Close PR
+          curl -s -X PATCH \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/$pr_number \
+            -d '{"state":"closed"}'
+
+          echo "Closed PR #$pr_number"
+        done
