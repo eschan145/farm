@@ -1,6 +1,6 @@
 name: Mass PR Creation and Closure
 
-on: 
+on:
   push:
     branches:
       - main
@@ -8,19 +8,19 @@ on:
 jobs:
   mass-pr:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-      
+
     - name: Configure Git
       run: |
         git config --global user.name "eschan145"
         git config --global user.email "esamuelchan@gmail.com"
-        
+
     - name: Create and Close PRs in a Loop
       env:
-        GH_TOKEN: ${{ secrets.GH_PAT }}
+        GH_PAT: ${{ secrets.GH_PAT }}  # Use GH_PAT from GitHub secrets
       run: |
         # Number of PRs to create
         PR_COUNT=100000  # Adjust to a smaller count
@@ -35,22 +35,34 @@ jobs:
           git commit -m "Add file_$i.txt for PR $i"
           git push origin $branch_name
 
-          # Open PR
+          # Open PR using GH_PAT token
           pr_response=$(curl -s -X POST \
-            -H "Authorization: token $GH_TOKEN" \
+            -H "Authorization: token $GH_PAT" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/pulls \
             -d "{\"title\":\"Test PR $i\",\"head\":\"$branch_name\",\"base\":\"main\"}")
 
-          pr_number=$(echo "$pr_response" | jq .number)
+          # Check if PR creation was successful
+          pr_number=$(echo "$pr_response" | jq -r .number)
+
+          if [ "$pr_number" == "null" ]; then
+            echo "Failed to open PR $i. Response: $pr_response"
+            continue
+          fi
+
           echo "Opened PR #$pr_number"
 
           # Close PR
-          curl -s -X PATCH \
-            -H "Authorization: token $GH_TOKEN" \
+          close_response=$(curl -s -X PATCH \
+            -H "Authorization: token $GH_PAT" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/pulls/$pr_number \
-            -d '{"state":"closed"}'
+            -d '{"state":"closed"}')
 
-          echo "Closed PR #$pr_number"
+          # Check if closing PR was successful
+          if [ "$close_response" == "null" ]; then
+            echo "Failed to close PR #$pr_number. Response: $close_response"
+          else
+            echo "Closed PR #$pr_number"
+          fi
         done
