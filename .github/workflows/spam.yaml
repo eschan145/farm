@@ -1,8 +1,11 @@
 name: Primary committer
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'  # Runs every 6 hours
+  push:
+    branches:
+      - main
+  # schedule:
+  #   - cron: '0 */6 * * *'  # Runs every 6 hours
 
 jobs:
   spam_commits:
