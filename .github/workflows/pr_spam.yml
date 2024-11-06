@@ -30,7 +30,10 @@ jobs:
           # Create a new branch
           branch_name="test-branch-$i"
           git checkout -b $branch_name
-          git pull origin main || echo "No updates to pull"
+          
+          git fetch origin
+          git reset --hard origin/main || echo "No updates to fetch"
+
           echo "Test file for PR $i" > "file_$i.txt"
           git add "file_$i.txt"
           git commit -m "Add file_$i.txt for PR $i"
