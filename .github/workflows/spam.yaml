@@ -29,7 +29,7 @@ jobs:
       - name: Spam Commits
         timeout-minutes: 4294967296
         run: |
-          total_commits=3000000
+          total_commits=55424475
           start_time=$(date +%s) # Capture the start time
           
           for ((i=1; i<=total_commits; i++))
