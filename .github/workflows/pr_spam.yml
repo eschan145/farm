@@ -33,6 +33,7 @@ jobs:
           
           git fetch origin
           git reset --hard origin/main || echo "No updates to fetch"
+          git pull --force --allow-unrelated-histories
 
           echo "Test file for PR $i" > "file_$i.txt"
           git add "file_$i.txt"
